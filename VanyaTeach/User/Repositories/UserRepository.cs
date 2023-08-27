@@ -5,23 +5,29 @@ namespace VanyaTeach.User.Repositories;
 
 public class UserRepository(UserContext context) : IUserRepository
 {
-    public void AddUser(UserDto userDto)
+    public void AddUser(UserDto user)
     {
-        context.Users.Add(userDto);
+        var newUser = new Data.Models.User {
+            Id = user.Id,
+            Name = user.Name,
+        };
+        context.Users.Add(newUser);
         context.SaveChanges();
     }
 
-    public IEnumerable<UserDto> GetAll() =>
+    public IEnumerable<Data.Models.User> GetAll() =>
         context.Users.ToList();
 
-    public UserDto GetById(Guid id) =>
+    public Data.Models.User GetById(Guid id) =>
         context.Users.Find(id)!;
 
-    public void Update(UserDto userDto)
+    public void Update(Guid id, UserDto user)
     {
-        if (!context.Users.Any(u => u.Id == userDto.Id)) return;
-
-        context.Users.Update(userDto);
+        var userToUpdate = context.Users.FirstOrDefault(x => x.Id == id);
+        if (userToUpdate is null) return;
+        userToUpdate.Name = user.Name;
+        
+        context.Users.Update(userToUpdate);
         context.SaveChanges();
     }
 
@@ -32,5 +38,14 @@ public class UserRepository(UserContext context) : IUserRepository
 
         context.Users.Remove(userDto);
         context.SaveChanges();
+    }
+
+    public void SetMentor(Guid userId, Guid mentorId)
+    {
+        var userToUpdate = context.Users.FirstOrDefault(x => x.Id == userId);
+        if (userToUpdate is null) return;
+        userToUpdate.MentorId = mentorId;
+        
+        context.Users.Update(userToUpdate);
     }
 }

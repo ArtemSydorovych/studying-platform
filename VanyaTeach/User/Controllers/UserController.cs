@@ -11,28 +11,28 @@ public class UserController(ILogger<UserController> logger, IUserRepository user
     private readonly ILogger<UserController> _logger = logger;
 
     [HttpGet(Name = "GetAllUsers")]
-    public IEnumerable<User.Data.Models.UserDto> GetAll() =>
+    public IEnumerable<User.Data.Models.User> GetAll() =>
         userRepository.GetAll();
 
 
     [HttpGet("{id:guid}")]
-    public ActionResult<UserDto> GetUser(Guid id)
+    public ActionResult<Data.Models.User> GetUser(Guid id)
     {
         var user = userRepository.GetById(id);
         return user;
     }
 
     [HttpPost]
-    public ActionResult<UserDto> CreateUser(UserDto userDto)
+    public ActionResult<Data.Models.User> CreateUser(UserDto user)
     {
-        userRepository.AddUser(userDto);
-        return CreatedAtAction(nameof(GetUser), new {id = userDto.Id}, userDto);
+        userRepository.AddUser(user);
+        return CreatedAtAction(nameof(GetUser), new {id = user.Id}, user);
     }
 
-    [HttpPut]
-    public IActionResult UpdateUser(UserDto userDto)
+    [HttpPut("{id:guid}")]
+    public IActionResult UpdateUser(Guid id, UserDto user)
     {
-        userRepository.Update(userDto);
+        userRepository.Update(id, user);
         return NoContent();
     }
 
