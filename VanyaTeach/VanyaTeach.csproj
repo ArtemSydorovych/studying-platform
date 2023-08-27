@@ -21,18 +21,11 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Common\Common.csproj" />
-
-
-
-
+    </ItemGroup>
 
     <ItemGroup>
       <Folder Include="Course\Controllers\" />
     </ItemGroup>
-
-    </ItemGroup>
-
-
 
 
 </Project>
