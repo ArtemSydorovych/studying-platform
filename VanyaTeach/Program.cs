@@ -1,4 +1,3 @@
-using Common.MongoDb;
 using VanyaTeach.User;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,7 +5,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddMongoDbService(builder.Configuration);
 builder.Services.ConfigureUserServices();
 
 var app = builder.Build();

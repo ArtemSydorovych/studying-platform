@@ -1,12 +1,13 @@
+
 using VanyaTeach.User.Data.Models;
 
 namespace VanyaTeach.User.Repositories;
 
-public interface IUserRepository
+public interface IStudentRepository
 {
-    void AddUser(UserDto user);
-    IEnumerable<Data.Models.User> GetAll();
-    Data.Models.User GetById(Guid id);
+    void Add(UserDto user);
+    IEnumerable<Student> GetAll();
+    Student GetById(Guid id);
     void Update(Guid id, UserDto user);
     void Delete(Guid id);
     void SetMentor(Guid userId, Guid mentorId);

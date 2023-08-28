@@ -3,49 +3,49 @@ using VanyaTeach.User.Data.Models;
 
 namespace VanyaTeach.User.Repositories;
 
-public class UserRepository(UserContext context) : IUserRepository
+public class StudentRepository(UserContext context) : IStudentRepository
 {
-    public void AddUser(UserDto user)
+    public void Add(UserDto user)
     {
-        var newUser = new Data.Models.User {
+        var newUser = new Student {
             Id = user.Id,
             Name = user.Name,
         };
-        context.Users.Add(newUser);
+        context.Students.Add(newUser);
         context.SaveChanges();
     }
+    
+    public IEnumerable<Student> GetAll() =>
+        context.Students.ToList();
 
-    public IEnumerable<Data.Models.User> GetAll() =>
-        context.Users.ToList();
-
-    public Data.Models.User GetById(Guid id) =>
-        context.Users.Find(id)!;
+    public Student GetById(Guid id) =>
+        context.Students.Find(id)!;
 
     public void Update(Guid id, UserDto user)
     {
-        var userToUpdate = context.Users.FirstOrDefault(x => x.Id == id);
+        var userToUpdate = context.Students.FirstOrDefault(x => x.Id == id);
         if (userToUpdate is null) return;
         userToUpdate.Name = user.Name;
         
-        context.Users.Update(userToUpdate);
+        context.Students.Update(userToUpdate);
         context.SaveChanges();
     }
 
     public void Delete(Guid id)
     {
-        var userDto = context.Users.Find(id);
+        var userDto = context.Students.Find(id);
         if (userDto == null) return;
 
-        context.Users.Remove(userDto);
+        context.Students.Remove(userDto);
         context.SaveChanges();
     }
 
     public void SetMentor(Guid userId, Guid mentorId)
     {
-        var userToUpdate = context.Users.FirstOrDefault(x => x.Id == userId);
+        var userToUpdate = context.Students.FirstOrDefault(x => x.Id == userId);
         if (userToUpdate is null) return;
         userToUpdate.MentorId = mentorId;
         
-        context.Users.Update(userToUpdate);
+        context.Students.Update(userToUpdate);
     }
 }

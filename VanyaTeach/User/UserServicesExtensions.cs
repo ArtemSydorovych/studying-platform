@@ -8,6 +8,6 @@ internal static class UserServicesExtensions
     public static void ConfigureUserServices(this IServiceCollection services)
     {
         services.AddSingleton<UserContext>();
-        services.AddSingleton<IUserRepository, UserRepository>();
+        services.AddSingleton<IStudentRepository, StudentRepository>();
     }
 }

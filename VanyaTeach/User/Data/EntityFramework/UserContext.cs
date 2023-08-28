@@ -1,10 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using VanyaTeach.User.Data.Models;
 
 namespace VanyaTeach.User.Data.EntityFramework;
 
 public class UserContext : DbContext
 {
-    public required DbSet<Models.User> Users { get; set; }
+    public required DbSet<Student> Students { get; set; }
+    public required DbSet<Mentor> Mentors { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
         optionsBuilder.UseSqlite("Filename=./mydatabase.db");
@@ -12,9 +14,17 @@ public class UserContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Configuring the UserDto entity
-        modelBuilder.Entity<Models.User>(entity =>
+        modelBuilder.Entity<Student>(entity =>
         {
             entity.HasKey(u => u.Id);
+            entity.HasOne(s => s.Mentor)
+                .WithMany(m => m.Students)
+                .HasForeignKey(s => s.MentorId);
+        });
+
+        modelBuilder.Entity<Mentor>(entity =>
+        {
+            entity.HasKey(m => m.Id);
         });
 
         base.OnModelCreating(modelBuilder);

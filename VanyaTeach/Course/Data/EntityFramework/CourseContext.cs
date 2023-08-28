@@ -49,9 +49,9 @@ public class CourseContext : DbContext
         modelBuilder.Entity<HomeworkSubmission>(entity =>
         {
             entity.HasKey(u => u.Id);
-            entity.HasOne(u => u.User)
+            entity.HasOne(u => u.Student)
                 .WithMany(u => u.Homeworks)
-                .HasForeignKey(u => u.UserId);
+                .HasForeignKey(u => u.StudentId);
         });
 
     }
