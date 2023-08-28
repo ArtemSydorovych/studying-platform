@@ -5,7 +5,7 @@ namespace VanyaTeach.User.Repositories;
 
 public interface IStudentRepository
 {
-    void Add(UserDto user);
+    Task Add(UserDto user);
     IEnumerable<Student> GetAll();
     Student GetById(Guid id);
     void Update(Guid id, UserDto user);

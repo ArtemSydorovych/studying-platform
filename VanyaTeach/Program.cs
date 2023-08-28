@@ -17,8 +17,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+
+using var scope = app.Services.CreateScope();
+var serviceProvider = scope.ServiceProvider;
+UserServicesExtensions.InitializeRoles(serviceProvider).Wait();
 
 app.Run();
