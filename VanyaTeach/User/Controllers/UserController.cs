@@ -16,30 +16,30 @@ public class UserController(ILogger<UserController> logger, IStudentRepository s
 
 
     [HttpGet("{id:guid}")]
-    public ActionResult<Student> GetUser(Guid id)
+    public async Task<ActionResult<Student>> GetUser(Guid id)
     {
-        var user = studentRepository.GetById(id);
+        var user = await studentRepository.GetById(id);
         return user;
     }
 
     [HttpPost]
-    public ActionResult<Student> CreateUser(UserDto user)
+    public async Task<ActionResult<Student>> CreateUser(UserDto user)
     {
-        studentRepository.Add(user);
+        await studentRepository.Add(user);
         return CreatedAtAction(nameof(GetUser), new {id = user.Id}, user);
     }
 
     [HttpPut("{id:guid}")]
-    public IActionResult UpdateUser(Guid id, UserDto user)
+    public async Task<IActionResult> UpdateEmail(Guid id, string email)
     {
-        studentRepository.Update(id, user);
+        await studentRepository.UpdateEmail(id, email);
         return NoContent();
     }
 
     [HttpDelete("{id}")]
-    public IActionResult DeleteUser(string id)
+    public async Task<IActionResult> DeleteUser(string id)
     {
-        studentRepository.Delete(Guid.Parse(id));
+        await studentRepository.Delete(Guid.Parse(id));
         return NoContent();
     }
 }

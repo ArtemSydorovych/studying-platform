@@ -14,7 +14,7 @@ public class StudentRepository(UserContext context, UserManager<Data.Models.User
             Email = user.Email,
         };
         
-        var result = await userManager.CreateAsync(newUser, user.Password);
+        var result = await userManager.CreateAsync(newUser, user.NewPassword!);
         if (result.Succeeded)
         {
             // Assign roles to the user
@@ -27,31 +27,56 @@ public class StudentRepository(UserContext context, UserManager<Data.Models.User
     public IEnumerable<Student> GetAll() =>
         context.Students.ToList();
 
-    public Student GetById(Guid id) =>
-        context.Students.Find(id)!;
+    public async Task<Student> GetById(Guid id) =>
+        (await context.Students.FindAsync(id))!;
 
-    public void Update(Guid id, UserDto user)
+    public async Task UpdateEmail(Guid id, string email)
     {
-        var userToUpdate = context.Students.FirstOrDefault(x => x.Id == id);
-        if (userToUpdate is null) return;
-        userToUpdate.Name = user.Name;
-        
-        context.Students.Update(userToUpdate);
-        context.SaveChanges();
+        var userToUpdate = await userManager.FindByIdAsync(id.ToString());
+        if (userToUpdate == null)
+        {
+            return;
+        }
+
+        userToUpdate.Email = email;
+        var emailUpdateResult = await userManager.UpdateAsync(userToUpdate);
+        if (!emailUpdateResult.Succeeded)
+        {
+        }
     }
 
-    public void Delete(Guid id)
+    public async Task UpdatePassword(Guid id, string currentPassword, string newPassword)
     {
-        var userDto = context.Students.Find(id);
-        if (userDto == null) return;
+        var userToUpdate = await userManager.FindByIdAsync(id.ToString());
+        if (userToUpdate == null)
+        {
+            return;
+        }
 
-        context.Students.Remove(userDto);
-        context.SaveChanges();
+        if (!string.IsNullOrEmpty(currentPassword) && !string.IsNullOrEmpty(newPassword))
+        {
+            var changePasswordResult = await userManager.ChangePasswordAsync(userToUpdate, currentPassword, newPassword);
+            if (!changePasswordResult.Succeeded)
+            {
+            }
+        }
     }
 
-    public void SetMentor(Guid userId, Guid mentorId)
+    public async Task Delete(Guid id)
     {
-        var mentor = context.Mentors.Find(mentorId);
+        var user = await userManager.FindByIdAsync(id.ToString());
+        if (user == null) return;
+
+        var result = await userManager.DeleteAsync(user);
+        if (!result.Succeeded)
+        {
+            // Handle errors
+        }
+    }
+
+    public async Task SetMentor(Guid userId, Guid mentorId)
+    {
+        var mentor = await context.Mentors.FindAsync(mentorId);
         var userToUpdate = context.Students.FirstOrDefault(x => x.Id == userId);
         if (userToUpdate is null) return;
 
@@ -60,6 +85,6 @@ public class StudentRepository(UserContext context, UserManager<Data.Models.User
 
         context.Students.Update(userToUpdate);
         context.Mentors.Update(mentor);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 }
