@@ -14,7 +14,7 @@ public class StudentRepository(UserContext context, UserManager<Data.Models.User
             Email = user.Email,
         };
         
-        var result = await userManager.CreateAsync(newUser, user.NewPassword!);
+        var result = await userManager.CreateAsync(newUser, user.Password!);
         if (result.Succeeded)
         {
             // Assign roles to the user

@@ -5,6 +5,5 @@ public class UserDto
     public Guid Id = Guid.NewGuid();
     public required string Name;
     public required string Email;
-    public string? NewPassword;
-    public string? CurrentPassword;
+    public string? Password;
 }
